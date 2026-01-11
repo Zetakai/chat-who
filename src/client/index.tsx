@@ -13,31 +13,6 @@ import { nanoid } from "nanoid";
 
 import { names, type ChatMessage, type Message } from "../shared";
 
-function CodeBlock({ content }: { content: string }) {
-	// Detect code blocks (```language\ncode\n``` or `code`)
-	const parts = content.split(/(```[\s\S]*?```|`[^`]+`)/g);
-	return (
-		<div className="message-content">
-			{parts.map((part, i) => {
-				if (part.startsWith("```") && part.endsWith("```")) {
-					const match = part.match(/^```(\w*)\n?([\s\S]*?)```$/);
-					const lang = match?.[1] || "";
-					const code = match?.[2] || part.slice(3, -3);
-					return (
-						<pre key={i} className="code-block">
-							{lang && <span className="code-lang">{lang}</span>}
-							<code>{code}</code>
-						</pre>
-					);
-				} else if (part.startsWith("`") && part.endsWith("`")) {
-					return <code key={i} className="inline-code">{part.slice(1, -1)}</code>;
-				}
-				return <span key={i}>{part}</span>;
-			})}
-		</div>
-	);
-}
-
 function Home() {
 	const [roomCode, setRoomCode] = useState("");
 	const navigate = useNavigate();
@@ -153,9 +128,7 @@ function App() {
 				{messages.map((message) => (
 					<div key={message.id} className="row message">
 						<div className="two columns user">{message.user}</div>
-						<div className="ten columns">
-							<CodeBlock content={message.content} />
-						</div>
+						<div className="ten columns content">{message.content}</div>
 					</div>
 				))}
 				<div ref={messagesEndRef} />
